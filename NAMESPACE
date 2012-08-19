@@ -1,0 +1,16 @@
+useDynLib(dna)
+
+export(
+PLSnet,cornet,RRnet,PCnet,gennet,network.modules,
+test.individual.genes,test.class.genes,test.modular.structure
+)
+
+exportClasses(
+"modules","pairOfNetworks",
+"resultsIndTest","resultsClassTest","resultsModTest"
+)
+
+exportMethods("get.modules","summary",
+"get.network1","get.network2","get.common.networks",
+"get.results"
+)
