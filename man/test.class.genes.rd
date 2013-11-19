@@ -58,13 +58,17 @@ colnames(X2)=paste("G",8:2,sep="")
 # symmetrizing the scores, or rescaling the scores and with squared distances
 # based on 10000 permutations
 ## Not run: our.genes=c(1,3)
-## Not run: tcg2=test.class.genes(X1,X2,genelist=our.genes,scores="PLS",distance="sqr",num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,rescale.scores=FALSE)
+## Not run: tcg2=test.class.genes(X1,X2,genelist=our.genes,scores="PLS",
+## distance="sqr",num.permutations=10000,rescale.data=FALSE,
+## symmetrize.scores=FALSE,rescale.scores=FALSE)
 ## Not run: tcg2
 ## 
 ## or, equivalently
 ##
 ## Not run: our.genes=c("G2","G4")
-## Not run: tcg2=test.class.genes(X1,X2,genelist=our.genes,scores="PLS",distance="abs",num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,rescale.scores=FALSE)
+## Not run: tcg2=test.class.genes(X1,X2,genelist=our.genes,scores="PLS",
+## distance="abs",num.permutations=10000,rescale.data=FALSE,
+## symmetrize.scores=FALSE,rescale.scores=FALSE)
 ## Not run: tcg2
 
 # perform a test for differential connectivity of all genes
@@ -86,14 +90,17 @@ colnames(X2)=paste("G",8:2,sep="")
 # perform a test for differential connectivity of individual genes 
 # with ridge regression connectivity scores with rescaled data,
 # symmetrized and rescaled scores and a penalty parameter equal to 3
-## Not run: tcg6=test.class.genes(X1,X2,scores="RR",rescale.scores=TRUE,lambda=3)
+## Not run: tcg6=test.class.genes(X1,X2,scores="RR",rescale.scores=TRUE,
+## lambda=3)
 ## Not run: tcg6
 
 # perform a test for differential connectivity of individual genes  
 # with custom ridge regression connectivity scores with 
 # centered and rescaled data and symmetrized and rescaled scores
-## Not run: ourRR=function(X,y,lambda=3){solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
-## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
+## Not run: ourRR=function(X,y,lambda=3){
+## solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
+## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,
+## rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
 ## Not run: tcg7=test.class.genes(X1,X2,scores=ourRRnet)
 ## Not run: tcg7
 }

@@ -1,4 +1,4 @@
-22d9b8befbe3d86a022389df30130035 *DESCRIPTION
+4587665e4bd306b72005f5b182770ea7 *DESCRIPTION
 1374c3bff63b240a569041fb85cb4255 *NAMESPACE
 511871ac045eebd68c05602f2f22b4dc *R/AllClass.R
 0235c733bd6b5ae13ff0199c43a357d4 *R/AllGeneric.R
@@ -15,7 +15,7 @@ db8d00b8bfe1bba37f2b151afc2dafa3 *R/get.modules-methods.R
 ebbce36ff9071b3b0a741c50b7421207 *R/get.network1-methods.R
 c81deb420e8de668a75956087cb3271f *R/get.network2-methods.R
 46a15b23247874443053118116e29754 *R/network.modules.R
-f042f525e9f37c97d0c4f290d9b3d948 *R/onAttach.R
+43c893c8dc47f7b215769afa60cfdeb0 *R/onAttach.R
 6673fc88fb3fbf9ea748a02ea68bbd97 *R/test.class.genes.R
 66faf4e48c3668af7f7882ec8e0acd84 *R/test.individual.genes.R
 42aff5147c918143d908d1820455e346 *R/test.modular.structure.R
@@ -27,7 +27,7 @@ cdb5320caeb9a8227eb32fb21c92c959 *man/LeanMice.rd
 54f59e41063986a26bfdc596355da9d9 *man/PLSnet.rd
 22a6c7cb3dc0eea81fc543df06f66f23 *man/RRnet.rd
 146b6075c5c663edfe4f48b6862c2503 *man/cornet.rd
-193ec4ed27a138088f2e43ae2dccfb7e *man/gennet.rd
+8d7d6019119184bdbe8735d44ddfb618 *man/gennet.rd
 4f4cf3225eaefcefa25c8770b668a505 *man/get.common.networks-methods.rd
 97de9eaedb2682fde82e6cf294d8683c *man/get.modules-methods.rd
 57d5d36e4b0f85c7f953bb6715eac11e *man/get.network1-methods.rd
@@ -40,9 +40,9 @@ d0d76bba6e7cb2e17c07daadf38a756a *man/network.modules.rd
 ca8ec8ebb781dd82c2c5467e0d517a72 *man/resultsIndTest-class.rd
 cc4cd0152c4695f97aaac6be5b25fca6 *man/resultsModTest-class.rd
 f7345c365572d6c631a6ee6d3fd7b60f *man/summary-methods.rd
-4ba142f12ea58f5220a0af3b5df7c5de *man/test.class.genes.rd
-faae82327b135ce06f46c12578a54db4 *man/test.individual.genes.rd
-9f96bbbcd8ac0acb3018bac3fc7a22a7 *man/test.modular.structure.rd
+fc94275301aecd9022fef7e547962e32 *man/test.class.genes.rd
+a880c79356af2d2f8d4615a87bc44395 *man/test.individual.genes.rd
+e4f2effe3a4ccbf514230c9c204502bf *man/test.modular.structure.rd
 82f21ebbb5e140f6291c639869f72d25 *src/Makevars
 4d0e1ffa287e6908a563fe256ccb73ab *src/UnionIntersectionStat.c
 7dd3ee46b03269731c8f21fbbcb7e34b *src/absDISTclassgenes.c

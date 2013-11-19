@@ -6,7 +6,8 @@
 two networks using PLS scores.
 }
 \usage{
-test.modular.structure(X1,X2,scores="PLS",min.module.size=5,epsilon=.5,num.permutations=1000,check.networks=TRUE,...)
+test.modular.structure(X1,X2,scores="PLS",min.module.size=5,epsilon=.5,
+num.permutations=1000,check.networks=TRUE,...)
 }
 \arguments{
    \item{X1}{network 1 with genes in columns and samples in rows.}
@@ -58,7 +59,9 @@ colnames(X2)=paste("G",8:2,sep="")
 # perform a test for modular structure using a minimum module size of 2
 # and threshold of .5 with PLS connectivity scores without rescaling the data,
 # symmetrizing the scores, or rescaling the scores based on 10000 permutations
-## Not run: tms2=test.modular.structure(X1,X2,scores="PLS",min.module.size=2,num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,rescale.scores=FALSE)
+## Not run: tms2=test.modular.structure(X1,X2,scores="PLS",min.module.size=2,
+## num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,
+## rescale.scores=FALSE)
 ## Not run: summary(tms2)
 
 # perform a test for modular structure using a minimum module size of 2
@@ -68,20 +71,26 @@ colnames(X2)=paste("G",8:2,sep="")
 
 # perform a test for modular structure using a minimum module size of 3
 # and threshold of .7 with principal components regression connectivity scores
-## Not run: tms4=test.modular.structure(X1,X2,scores="PC",min.module.size=3,epsilon=.7)
+## Not run: tms4=test.modular.structure(X1,X2,scores="PC",min.module.size=3,
+## epsilon=.7)
 ## Not run: summary(tms4)
 
 # perform a test for modular structure using a minimum module size of 2
-# and threshold of .9 with ridge regression connectivity scores with rescaled data,
-# symmetrized and rescaled scores and a penalty parameter equal to 3
-## Not run: tms5=test.modular.structure(X1,X2,scores="RR",min.module.size=2,epsilon=.5,rescale.scores=TRUE,lambda=3)
+# and threshold of .9 with ridge regression connectivity scores with 
+# rescaled data, symmetrized and rescaled scores and a penalty parameter 
+# equal to 3
+## Not run: tms5=test.modular.structure(X1,X2,scores="RR",min.module.size=2,
+## epsilon=.5,rescale.scores=TRUE,lambda=3)
 ## Not run: summary(tms5)
 
 # perform a test for modular structure using a minimum module size of 2 and 
 # threshold of .9 with custom ridge regression connectivity scores with 
 # centered and rescaled data and symmetrized and rescaled scores
-## Not run: ourRR=function(X,y,lambda=3){solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
-## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
-## Not run: tms6=test.modular.structure(X1,X2,scores=ourRRnet,min.module.size=2,epsilon=.9)
+## Not run: ourRR=function(X,y,lambda=3){
+## solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
+## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,
+## rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
+## Not run: tms6=test.modular.structure(X1,X2,scores=ourRRnet,
+## min.module.size=2,epsilon=.9)
 ## Not run: summary(tms6)
 }

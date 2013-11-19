@@ -59,7 +59,9 @@ colnames(X2)=paste("G",8:2,sep="")
 # with PLS connectivity scores without rescaling the data,
 # symmetrizing the scores, or rescaling the scores and with squared distances
 # based on 10000 permutations
-## Not run: tig2=test.individual.genes(X1,X2,scores="PLS",distance="sqr",num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,rescale.scores=FALSE)
+## Not run: tig2=test.individual.genes(X1,X2,scores="PLS",distance="sqr",
+## num.permutations=10000,rescale.data=FALSE,symmetrize.scores=FALSE,
+## rescale.scores=FALSE)
 ## Not run: summary(tig2)
 
 # perform a test for differential connectivity of individual genes 
@@ -81,14 +83,17 @@ colnames(X2)=paste("G",8:2,sep="")
 # perform a test for differential connectivity of individual genes 
 # with ridge regression connectivity scores with rescaled data,
 # symmetrized and rescaled scores and a penalty parameter equal to 3
-## Not run: tig6=test.individual.genes(X1,X2,scores="RR",rescale.scores=TRUE,lambda=3)
+## Not run: tig6=test.individual.genes(X1,X2,scores="RR",
+## rescale.scores=TRUE,lambda=3)
 ## Not run: summary(tig6)
 
 # perform a test for differential connectivity of individual genes  
 # with custom ridge regression connectivity scores with 
 # centered and rescaled data and symmetrized and rescaled scores
-## Not run: ourRR=function(X,y,lambda=3){solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
-## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
+## Not run: ourRR=function(X,y,lambda=3){
+## solve(t(X)%*%X+lambda*diag(ncol(X)))%*%t(X)%*%y}
+## Not run: ourRRnet=function(X){gennet(X,f=ourRR,recenter.data=TRUE,
+## rescale.data=TRUE,symmetrize.scores=TRUE,rescale.scores=TRUE)}
 ## Not run: tig7=test.individual.genes(X1,X2,scores=ourRRnet)
 ## Not run: summary(tig7)
 }

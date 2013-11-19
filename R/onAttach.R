@@ -1,4 +1,4 @@
 .onAttach=function(lib,pkg)
 {
- packageStartupMessage("dna 1.0-0 loaded")
+ packageStartupMessage("dna 1.0-2 loaded")
 }
