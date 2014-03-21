@@ -5,7 +5,7 @@
    Determine the modular structure for a network.
 }
 \usage{
-network.modules(s,m,epsilon,plot=FALSE,...)
+network.modules(s,m,epsilon,plot=FALSE,interactive=FALSE,...)
 }
 \arguments{
    \item{s}{scores for a network.}
@@ -13,6 +13,7 @@ network.modules(s,m,epsilon,plot=FALSE,...)
    \item{epsilon}{threshold parameter.}
    \item{plot}{indicates whether to create a graph for the network using the
 tkplot function in the igraph package.}
+   \item{interactive}{indicates whether any plotted graphs should be interactive.}
    \item{...}{additional arguments passed to the tkplot function in the igraph package.}
 }
 \value{

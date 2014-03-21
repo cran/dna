@@ -1,4 +1,4 @@
-network.modules=function(s,m,epsilon,plot=FALSE,...){
+network.modules=function(s,m,epsilon,plot=FALSE,interactive=FALSE,...){
  p=as.integer(nrow(s))
  if (is.null(colnames(s))){
   colnames(s)=paste("Gene",1:p)
@@ -25,7 +25,10 @@ network.modules=function(s,m,epsilon,plot=FALSE,...){
    g=graph.empty(directed=FALSE)
    g=add.vertices(g,length(graph.genenames),names=graph.genenames)
    g=add.edges(g,edges)
-   tkplot(g,vertex.label=V(g)$names,...)
+   if (interactive==TRUE)
+    tkplot(g,vertex.label=V(g)$names,...)
+   else
+    plot(g,vertex.label=V(g)$names,...)
   }
   else{
    cat("No plot created since there are no modules in this network.\n")
