@@ -8,10 +8,6 @@ Lean Mice Dataset.
 the liver tissue of lean female mice.  There were 3421 genes and 135 mice in the full data set; this data set was obtained by removing genes and mice with missing values.  Then the 50 leanest mice (weights less than 36.9 g) were selected.  Finally, univariate regressions of mouse weights on each individual gene were performed and 314 genes with z-scores greater than 5 were selected.}
 \usage{data(LeanMice)}
 \format{A 50 by 314 matrix.}
-\source{
-The complete mouse weight data set can be found at 
-\url{http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork/MouseWeight/}.
-}
 \references{  
 Fuller, T., Ghazalpour, A., Aten, J., Drake, T., Lusis, A., and Horvath, S. (2007) Weighted gene coexpression network analysis strategies applied to mouse weight. \emph{Mammalian Genome}, \bold{28}, 463--472. 
 

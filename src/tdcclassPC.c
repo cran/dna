@@ -1,5 +1,27 @@
+/*  file dna/src/tdcclassPC.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	tdcclassPC(...)
+ *
+ * to be called as  .C(.)  in ../R/test.class.genes.R
+ */
+
 #include "plslib.h"
-#include "R.h"
+
 void tdcclassPC(double *x1, double *x2, int *f, int *nf, double *pval, double *dlt, int *n1, int *n2, int *p, int *ncom, int *nperm, int *rescaleData, int *symmetrizeScores, int *rescaleScores, int *distancetype){
  int i,pvalnum;
  double pdlt;
@@ -9,12 +31,12 @@ void tdcclassPC(double *x1, double *x2, int *f, int *nf, double *pval, double *d
  double *s2;
  double *ps1;
  double *ps2;
- px1=malloc((*n1)*(*p)*sizeof(double));
- px2=malloc((*n2)*(*p)*sizeof(double));
- s1=malloc((*p)*(*p)*sizeof(double));
- s2=malloc((*p)*(*p)*sizeof(double));
- ps1=malloc((*p)*(*p)*sizeof(double));
- ps2=malloc((*p)*(*p)*sizeof(double));
+ px1=Calloc((*n1)*(*p),double);
+ px2=Calloc((*n2)*(*p),double);
+ s1=Calloc((*p)*(*p),double);
+ s2=Calloc((*p)*(*p),double);
+ ps1=Calloc((*p)*(*p),double);
+ ps2=Calloc((*p)*(*p),double);
  rpcnet(x1,s1,ncom,n1,p,rescaleData,symmetrizeScores,rescaleScores);
  rpcnet(x2,s2,ncom,n2,p,rescaleData,symmetrizeScores,rescaleScores);
  if (*distancetype==1)
@@ -40,10 +62,10 @@ void tdcclassPC(double *x1, double *x2, int *f, int *nf, double *pval, double *d
    pvalnum++;
  }
  *pval=(0.0+pvalnum)/(*nperm);
- free(s1);
- free(s2);
- free(ps1);
- free(ps2);
- free(px1);
- free(px2);
+ Free(s1);
+ Free(s2);
+ Free(ps1);
+ Free(ps2);
+ Free(px1);
+ Free(px2);
 }

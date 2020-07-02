@@ -1,5 +1,4 @@
 \name{resultsClassTest-class}
-\Rdversion{1.1}
 \docType{class}
 \alias{resultsClassTest-class}
 \alias{show,resultsClassTest-method}

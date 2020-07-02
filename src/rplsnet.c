@@ -1,17 +1,27 @@
+/*  file dna/src/rplsnet.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	rplsnet(...)
+ *
+ * to be called as  .C(.)  in ../R/PLSnet.R
+ */
+
 #include "plslib.h"
-extern double ddot_(int *n, double *dx, int *incx, double *dy, int *incy);
-
-extern double dnrm2_(int *n, double *x, int *incx);
-
-extern int dscal_(int *n, double *alpha, double *x, int *incx);
-
-extern int dcopy_(int *n, double *x, int *incx, double *y, int *incy);
-
-extern int dsyr_(char *uplo, int *n, double *alpha, double *x, int *incx, double *a, int *lda);
-
-extern int dgemv_(char *trans, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
-
-extern int dsymm_(char *side, char *uplo, int *m, int *n, double *alpha, double *a,int *lda, double *b, int *ldb, double *beta, double *c, int *ldc);
+#include <R_ext/Lapack.h>
 
 void rplsnet(double *origdata, double *s, int *ncom, int *n, int *p, 
 int *rescaleData, int *symmetrizeScores, int *rescaleScores){
@@ -49,19 +59,19 @@ int *rescaleData, int *symmetrizeScores, int *rescaleScores){
  double tempdouble, tempsum, tempsum2, tempmean;
  double tempsd=0.0;
 
- data=malloc(np*sizeof(double));
- X=malloc((*n)*pm1*sizeof(double));
- y=malloc((*n)*sizeof(double));
- b=malloc((*ncom)*sizeof(double));
- cX=malloc((*n)*pm1*sizeof(double));
- tc=malloc(pm1*(*ncom)*sizeof(double));
- tTT=malloc((*ncom)*(*n)*sizeof(double));
- TTTT=malloc((*n)*(*n)*sizeof(double));
- tX=malloc((*n)*pm1*sizeof(double));
- c=malloc(pm1*(*ncom)*sizeof(double));
- tsk=malloc(pm1*sizeof(double));
+ data=Calloc(np,double);
+ X=Calloc((*n)*pm1,double);
+ y=Calloc(*n,double);
+ b=Calloc(*ncom,double);
+ cX=Calloc((*n)*pm1,double);
+ tc=Calloc(pm1*(*ncom),double);
+ tTT=Calloc((*ncom)*(*n),double);
+ TTTT=Calloc((*n)*(*n),double);
+ tX=Calloc((*n)*pm1,double);
+ c=Calloc(pm1*(*ncom),double);
+ tsk=Calloc(pm1,double);
 
- dcopy_(&np,origdata,&incx,data,&incy);
+ F77_CALL(dcopy)(&np,origdata,&incx,data,&incy);
 
  count=0;
  for (j=0;j<*p;j++){
@@ -113,45 +123,45 @@ int *rescaleData, int *symmetrizeScores, int *rescaleScores){
     y[i]=tempdouble;
     jip++;
    }
-  dcopy_(&npm1,X,&incx,cX,&incy);
+  F77_CALL(dcopy)(&npm1,X,&incx,cX,&incy);
   for (k=0;k<*ncom;k++){
    cc=tc+k*pm1;
    trans='t';
 // column k+1 of cc <- t(cX) * y 
-   dgemv_(&trans,n,&pm1,&alpha,cX,n,y,&incx,&beta,cc,&incy);
+   F77_CALL(dgemv)(&trans,n,&pm1,&alpha,cX,n,y,&incx,&beta,cc,&incy FCLEN);
 // standardize column k+1 of cc
-   tempdouble=1/dnrm2_(&pm1,cc,&incx);
-   dscal_(&pm1,&tempdouble,cc,&incx);
+   tempdouble=1/F77_CALL(dnrm2)(&pm1,cc,&incx);
+   F77_CALL(dscal)(&pm1,&tempdouble,cc,&incx);
 // column k+1 of tTT <- cX * cc
    trans='n';
-   dgemv_(&trans,n,&pm1,&alpha,cX,n,cc,&incx,&beta,tTT,&incy);
+   F77_CALL(dgemv)(&trans,n,&pm1,&alpha,cX,n,cc,&incx,&beta,tTT,&incy FCLEN);
 // component k+1 of tempb <- (t(column k+1 of tTT) * y)/(t(column k+1 of tTT)*column k+1 of tTT)
-   *tempb=ddot_(n,tTT,&incx,y,&incy);
-   tempdouble=1/ddot_(n,tTT,&incx,tTT,&incy);
+   *tempb=F77_CALL(ddot)(n,tTT,&incx,y,&incy);
+   tempdouble=1/F77_CALL(ddot)(n,tTT,&incx,tTT,&incy);
    *tempb*=tempdouble;
    tempb++;
 // TTTT <- column k+1 of tTT * t(column k+1 of tTT)
    for (i=0;i<(*n)*(*n);i++)
     TTTT[i]=0;
-   dsyr_(&uplo,n,&alpha,tTT,&incx,TTTT,n);
+   F77_CALL(dsyr)(&uplo,n,&alpha,tTT,&incx,TTTT,n FCLEN);
    for (i=0;i<(*n)-1;i++)
     for (l=i+1;l<(*n);l++)
      TTTT[i*(*n)+l]=TTTT[l*(*n)+i];
 // divide TTTT by t(column k+1 of tTT) * column k+1 of tTT
-   dscal_(&nn,&tempdouble,TTTT,&incx);
+   F77_CALL(dscal)(&nn,&tempdouble,TTTT,&incx);
 // subtract TTTT by I
    for (i=0;i<*n;i++)
     TTTT[i*(*n+1)]-=1;
-   dscal_(&nn,&m1,TTTT,&incx);
+   F77_CALL(dscal)(&nn,&m1,TTTT,&incx);
 // tX <- TTTT*cX
-   dsymm_(&side,&uplo,n,&pm1,&alpha,TTTT,n,cX,n,&beta,tX,n);
-   dcopy_(&npm1,tX,&incx,cX,&incy);
+   F77_CALL(dsymm)(&side,&uplo,n,&pm1,&alpha,TTTT,n,cX,n,&beta,tX,n FCLEN FCLEN);
+   F77_CALL(dcopy)(&npm1,tX,&incx,cX,&incy);
   }
-  dcopy_(&ncompm1,tc,&incx,c,&incy);
+  F77_CALL(dcopy)(&ncompm1,tc,&incx,c,&incy);
 
 // tsk <- c * b
   trans='n';
-  dgemv_(&trans,&pm1,ncom,&alpha,c,&pm1,b,&incx,&beta,tsk,&incy);
+  F77_CALL(dgemv)(&trans,&pm1,ncom,&alpha,c,&pm1,b,&incx,&beta,tsk,&incy FCLEN);
   count=0;
 // column j+1 of s <- tsk
   for (i=0;i<*p;i++)
@@ -177,20 +187,20 @@ int *rescaleData, int *symmetrizeScores, int *rescaleScores){
      if (fabs(s[i*(*p)+j])>tempdouble)
       tempdouble=fabs(s[i*(*p)+j]);
   tempdouble=1/tempdouble;
-  dscal_(&pp,&tempdouble,s,&incx); 
+  F77_CALL(dscal)(&pp,&tempdouble,s,&incx); 
  }
  for (j=0;j<*p;j++)
   s[j*(*p)+j]=1;
 
- free(tsk);
- free(c);
- free(tX);
- free(TTTT);
- free(tTT);
- free(tc);
- free(cX);
- free(b);
- free(X);
- free(y);
- free(data); 
+ Free(tsk);
+ Free(c);
+ Free(tX);
+ Free(TTTT);
+ Free(tTT);
+ Free(tc);
+ Free(cX);
+ Free(b);
+ Free(X);
+ Free(y);
+ Free(data); 
 }

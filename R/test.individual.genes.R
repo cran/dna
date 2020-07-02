@@ -1,3 +1,19 @@
+# file dna/R/test.individual.genes.R
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 or 3 of the License
+#  (at your option).
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  A copy of the GNU General Public License is available at
+#  http://www.r-project.org/Licenses/
+#
+
 test.individual.genes=function(X1,X2,scores="PLS",distance="abs",
 num.permutations=1000,check.networks=TRUE,...){
  X1=as.matrix(X1)
@@ -35,7 +51,7 @@ rescale.scores=FALSE){
  gene.names=colnames(X1)
  out=.C("tdcindPLS",as.double(X1),as.double(X2),pval=double(p),d=double(p),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),
 as.integer(symmetrize.scores),as.integer(rescale.scores),
-as.integer(distancetype),PACKAGE="dna") 
+as.integer(distancetype)) 
  names(out$pval)=gene.names
  names(out$d)=gene.names
  new("resultsIndTest",p.values=out$pval,d=out$d)
@@ -55,7 +71,7 @@ rescale.scores=FALSE){
  out=.C("tdcindPC",as.double(X1),as.double(X2),pval=double(p),d=double(p),n1,n2,
 p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),
 as.integer(symmetrize.scores),as.integer(rescale.scores),
-as.integer(distancetype),PACKAGE="dna") 
+as.integer(distancetype)) 
  names(out$pval)=gene.names
  names(out$d)=gene.names
  new("resultsIndTest",p.values=out$pval,d=out$d)
@@ -75,7 +91,7 @@ rescale.scores=FALSE){
  out=.C("tdcindRR",as.double(X1),as.double(X2),pval=double(p),d=double(p),n1,n2,
 p,as.double(lambda),as.integer(num.permutations),as.integer(rescale.data),
 as.integer(symmetrize.scores),as.integer(rescale.scores),
-as.integer(distancetype),PACKAGE="dna") 
+as.integer(distancetype)) 
  names(out$pval)=gene.names
  names(out$d)=gene.names
  new("resultsIndTest",p.values=out$pval,d=out$d)

@@ -1,9 +1,10 @@
-useDynLib(dna)
+useDynLib(dna, .registration=TRUE)
 
 import(methods)
 
+#functions
 export(
-PLSnet,cornet,RRnet,PCnet,gennet,network.modules,
+cornet, PLSnet, PCnet, RRnet, gennet, network.modules,
 test.individual.genes,test.class.genes,test.modular.structure
 )
 
@@ -12,7 +13,8 @@ exportClasses(
 "resultsIndTest","resultsClassTest","resultsModTest"
 )
 
-exportMethods("get.modules","summary",
-"get.network1","get.network2","get.common.networks",
-"get.results"
+exportMethods(
+"get.modules","get.network1","get.network2","get.common.networks",
+"summary","get.results"
 )
+

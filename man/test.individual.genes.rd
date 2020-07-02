@@ -31,6 +31,7 @@ Gill, R., Datta, S., and Datta, S. (2010) A statistical framework for differenti
 }
 \examples{
 # small example illustrating test procedures
+set.seed(12345)
 X1=rbind(
 c(2.5,6.7,4.5,2.3,8.4,3.1),
 c(1.2,0.7,4.0,9.1,6.6,7.1),

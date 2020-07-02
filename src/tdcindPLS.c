@@ -1,5 +1,27 @@
+/*  file dna/src/tdcindPLS.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	tdcindPLS(...)
+ *
+ * to be called as  .C(.)  in ../R/test.individual.genes.R
+ */
+
 #include "plslib.h"
-#include "R.h"
+
 void tdcindPLS(double *x1, double *x2, double *pval, double *d, int *n1, int *n2, int *p, int *ncom, int *nperm, int *rescaleData, int *symmetrizeScores, int *rescaleScores, int *distancetype){
  int i,j;
  int *pvalnum;
@@ -10,14 +32,14 @@ void tdcindPLS(double *x1, double *x2, double *pval, double *d, int *n1, int *n2
  double *s2;
  double *ps1;
  double *ps2;
- pvalnum=malloc((*p)*sizeof(int));
- pd=malloc((*p)*sizeof(double));
- px1=malloc((*n1)*(*p)*sizeof(double));
- px2=malloc((*n2)*(*p)*sizeof(double));
- s1=malloc((*p)*(*p)*sizeof(double));
- s2=malloc((*p)*(*p)*sizeof(double));
- ps1=malloc((*p)*(*p)*sizeof(double));
- ps2=malloc((*p)*(*p)*sizeof(double));
+ pvalnum=Calloc(*p,int);
+ pd=Calloc(*p,double);
+ px1=Calloc((*n1)*(*p),double);
+ px2=Calloc((*n2)*(*p),double);
+ s1=Calloc((*p)*(*p),double);
+ s2=Calloc((*p)*(*p),double);
+ ps1=Calloc((*p)*(*p),double);
+ ps2=Calloc((*p)*(*p),double);
  rplsnet(x1,s1,ncom,n1,p,rescaleData,symmetrizeScores,rescaleScores);
  rplsnet(x2,s2,ncom,n2,p,rescaleData,symmetrizeScores,rescaleScores);
  if (*distancetype==1)
@@ -46,12 +68,12 @@ void tdcindPLS(double *x1, double *x2, double *pval, double *d, int *n1, int *n2
  }
  for (j=0;j<*p;j++)
   pval[j]=(0.0+pvalnum[j])/(*nperm);
- free(pvalnum);
- free(pd);
- free(s1);
- free(s2);
- free(ps1);
- free(ps2);
- free(px1);
- free(px2);
+ Free(pvalnum);
+ Free(pd);
+ Free(s1);
+ Free(s2);
+ Free(ps1);
+ Free(ps2);
+ Free(px1);
+ Free(px2);
 }

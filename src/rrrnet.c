@@ -1,13 +1,27 @@
+/*  file dna/src/rrrnet.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	rrrnet(...)
+ *
+ * to be called as  .C(.)  in ../R/RRnet.R
+ */
+
 #include "plslib.h"
-extern int dscal_(int *n, double *alpha, double *x, int *incx);
-
-extern int dcopy_(int *n, double *x, int *incx, double *y, int *incy);
-
-extern int dgemv_(char *trans, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
-
-extern int dposv_(char *uplo, int *n, int *nrhs, double *a, int *lda, double *b, int *ldb, int *info);
-
-extern int dsyrk_(char *uplo, char *trans, int *n, int *k, double *alpha, double *a, int *lda, double *beta, double *c, int *ldc);
+#include <R_ext/Lapack.h>
 
 void rrrnet(double *origdata, double *s, double *lambda, int *n, int *p, int *rescaleData, int *symmetrizeScores, int *rescaleScores){
  double *data;
@@ -31,13 +45,13 @@ void rrrnet(double *origdata, double *s, double *lambda, int *n, int *p, int *re
  int pm1=*p-1;
  int np=(*n)*(*p);
  
- data=malloc(np*sizeof(double));
- X=malloc((*n)*pm1*sizeof(double));
- XTXpI=malloc(pm1*pm1*sizeof(double));
- y=malloc((*n)*sizeof(double));
- b=malloc(pm1*sizeof(double));
+ data=Calloc(np,double);
+ X=Calloc((*n)*pm1,double);
+ XTXpI=Calloc(pm1*pm1,double);
+ y=Calloc(*n,double);
+ b=Calloc(pm1,double);
 
- dcopy_(&np,origdata,&intone,data,&intone);
+ F77_CALL(dcopy)(&np,origdata,&intone,data,&intone);
 
  count=0;
  for (j=0;j<*p;j++){
@@ -98,9 +112,9 @@ void rrrnet(double *origdata, double *s, double *lambda, int *n, int *p, int *re
     count++;
    }
   trans='t';
-  dsyrk_(&uplo,&trans,&pm1,n,&doubleone,X,n,lambda,XTXpI,&pm1);
-  dgemv_(&trans,n,&pm1,&doubleone,X,n,y,&intone,&doublezero,b,&intone);
-  dposv_(&uplo,&pm1,&intone,XTXpI,&pm1,b,&pm1,&info);
+  F77_CALL(dsyrk)(&uplo,&trans,&pm1,n,&doubleone,X,n,lambda,XTXpI,&pm1 FCLEN FCLEN);
+  F77_CALL(dgemv)(&trans,n,&pm1,&doubleone,X,n,y,&intone,&doublezero,b,&intone FCLEN);
+  F77_CALL(dposv)(&uplo,&pm1,&intone,XTXpI,&pm1,b,&pm1,&info FCLEN);
   count=0;
   for (i=0;i<*p;i++)
    if (i!=j){
@@ -125,15 +139,15 @@ void rrrnet(double *origdata, double *s, double *lambda, int *n, int *p, int *re
      if (fabs(s[i*(*p)+j])>tempdouble)
       tempdouble=fabs(s[i*(*p)+j]);
   tempdouble=1/tempdouble;
-  dscal_(&pp,&tempdouble,s,&intone); 
+  F77_CALL(dscal)(&pp,&tempdouble,s,&intone); 
  }
  for (j=0;j<*p;j++)
   s[j*(*p)+j]=1;
 
- free(b);
- free(XTXpI);
- free(X);
- free(y);
- free(data);
+ Free(b);
+ Free(XTXpI);
+ Free(X);
+ Free(y);
+ Free(data);
 }
 

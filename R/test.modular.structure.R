@@ -1,3 +1,19 @@
+# file dna/R/test.modular.structure.R
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 or 3 of the License
+#  (at your option).
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  A copy of the GNU General Public License is available at
+#  http://www.r-project.org/Licenses/
+#
+
 test.modular.structure=function(X1,X2,scores="PLS",min.module.size=5,epsilon=.5,num.permutations=1000,check.networks=TRUE,...){
  X1=as.matrix(X1)
  X2=as.matrix(X2)
@@ -28,7 +44,7 @@ PLSnet.test.modular.structure=function(X1,X2,min.module.size=5,epsilon=.5,num.pe
  gene.names=colnames(X1) 
  if (is.null(gene.names))
   gene.names=paste("Gene",1:p)
- out=.C("tdmsPLS",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),PACKAGE="dna")
+ out=.C("tdmsPLS",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores))
  names(out$module1)=gene.names
  names(out$module2)=gene.names
  new("resultsModTest",p.value=out$pval,N=out$sN,modules1=new("modules",module=as.factor(out$module1)),modules2=new("modules",module=as.factor(out$module2)))
@@ -41,7 +57,7 @@ PCnet.test.modular.structure=function(X1,X2,min.module.size=5,epsilon=.5,num.per
  gene.names=colnames(X1) 
  if (is.null(gene.names))
   gene.names=paste("Gene",1:p)
- out=.C("tdmsPC",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),PACKAGE="dna")
+ out=.C("tdmsPC",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores))
  names(out$module1)=gene.names
  names(out$module2)=gene.names
  new("resultsModTest",p.value=out$pval,N=out$sN,modules1=new("modules",module=as.factor(out$module1)),modules2=new("modules",module=as.factor(out$module2)))
@@ -54,7 +70,7 @@ RRnet.test.modular.structure=function(X1,X2,min.module.size=5,epsilon=.5,num.per
  gene.names=colnames(X1) 
  if (is.null(gene.names))
   gene.names=paste("Gene",1:p)
- out=.C("tdmsRR",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.double(lambda),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),PACKAGE="dna")
+ out=.C("tdmsRR",as.double(X1),as.double(X2),as.integer(min.module.size),as.double(epsilon),pval=double(1),sN=double(1),module1=integer(p),module2=integer(p),n1,n2,p,as.double(lambda),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores))
  names(out$module1)=gene.names
  names(out$module2)=gene.names
  new("resultsModTest",p.value=out$pval,N=out$sN,modules1=new("modules",module=as.factor(out$module1)),modules2=new("modules",module=as.factor(out$module2)))

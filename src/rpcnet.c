@@ -1,16 +1,27 @@
+/*  file dna/src/rpcnet.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	rpcnet(...)
+ *
+ * to be called as  .C(.)  in ../R/PCnet.R
+ */
+
 #include "plslib.h"
-
-extern int dscal_(int *n, double *alpha, double *x, int *incx);
-
-extern int dcopy_(int *n, double *x, int *incx, double *y, int *incy);
-
-extern int dsyrk_(char *uplo, char *trans, int *n, int *k, double *alpha, double *a, int *lda, double *beta, double *c, int *ldc);
-
-extern int dsyevr_(char *jobz, char *range, char *uplo, int *n, double *A, int *lda, double *vl, double *vu, int *il, int *iu, double *abstol, int *m, double *w, double *z, int *ldz, int *isuppz, double *work, int *lwork, int *iwork, int *liwork, int *info);
-
-extern int dgemv_(char *trans, int *m, int *n, double *alpha, double *a, int *lda, double *x, int *incx, double *beta, double *y, int *incy);
-
-extern int dgemm_(char *transa, char *transb, int* m, int* n, int* k, double *alpha, double *a, int *lda, double *b, int *ldb, double *beta, double *c, int *ldc);
+#include <R_ext/Lapack.h>
 
 void rpcnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescaleData, int *symmetricScores, int *rescaleScores){
  double *data;
@@ -54,20 +65,20 @@ void rpcnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescale
  double *work;
  double *tsk;
 
- data=malloc(np*sizeof(double));
- X=malloc(npm1*sizeof(double));
- y=malloc((*n)*sizeof(double));
- b=malloc((*ncom)*sizeof(double));
- G=malloc(pm1*pm1*sizeof(double));
- T=malloc((*n)*(*ncom)*sizeof(double));
- eigenvalues=malloc((*ncom+1)*sizeof(double));
- eigenvectors=malloc((pm1*(*ncom)+1)*sizeof(double));
- isuppz=malloc(pm1*sizeof(int));
- tsk=malloc(pm1*sizeof(double));
- work=malloc(sizeof(double));
- iwork=malloc(sizeof(double));
+ data=Calloc(np,double);
+ X=Calloc(npm1,double);
+ y=Calloc(*n,double);
+ b=Calloc(*ncom,double);
+ G=Calloc(pm1*pm1,double);
+ T=Calloc((*n)*(*ncom),double);
+ eigenvalues=Calloc(*ncom+1,double);
+ eigenvectors=Calloc(pm1*(*ncom)+1,double);
+ isuppz=Calloc(pm1,int);
+ tsk=Calloc(pm1,double);
+ work=Calloc(1,double);
+ iwork=Calloc(1,int);
 
- dcopy_(&np,origdata,&incx,data,&incy);
+ F77_CALL(dcopy)(&np,origdata,&incx,data,&incy);
 
  count=0;
  for (j=0;j<*p;j++){
@@ -116,17 +127,17 @@ void rpcnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescale
     jip++;
    }
   trans='t';
-  dsyrk_(&uplo,&trans,&pm1,n,&doubleone,X,n,&doublezero,G,&pm1);
+  F77_CALL(dsyrk)(&uplo,&trans,&pm1,n,&doubleone,X,n,&doublezero,G,&pm1 FCLEN FCLEN);
   lwork=-1;
   liwork=-1;
-  dsyevr_(&jobz,&range,&uplo,&pm1,G,&pm1,&vl,&vu,&il,&iu,&doublem1,&m,eigenvalues,eigenvectors,&pm1,isuppz,&workin,&lwork,&iworkin,&liwork,&info);
+  F77_CALL(dsyevr)(&jobz,&range,&uplo,&pm1,G,&pm1,&vl,&vu,&il,&iu,&doublem1,&m,eigenvalues,eigenvectors,&pm1,isuppz,&workin,&lwork,&iworkin,&liwork,&info FCLEN FCLEN FCLEN);
   lwork = (int)workin;
-  work=realloc(work,lwork*sizeof(double));
+  work=Realloc(work,lwork,double);
   liwork = (int)iworkin;
-  iwork=realloc(iwork,liwork*sizeof(int));
-  dsyevr_(&jobz,&range,&uplo,&pm1,G,&pm1,&vl,&vu,&il,&iu,&doublem1,&m,eigenvalues,eigenvectors,&pm1,isuppz,work,&lwork,iwork,&liwork,&info);
+  iwork=Realloc(iwork,liwork,int);
+  F77_CALL(dsyevr)(&jobz,&range,&uplo,&pm1,G,&pm1,&vl,&vu,&il,&iu,&doublem1,&m,eigenvalues,eigenvectors,&pm1,isuppz,work,&lwork,iwork,&liwork,&info FCLEN FCLEN FCLEN);
   trans='n';
-  dgemm_(&trans,&trans,n,ncom,&pm1,&alpha,X,n,eigenvectors,&pm1,&beta,T,n);
+  F77_CALL(dgemm)(&trans,&trans,n,ncom,&pm1,&alpha,X,n,eigenvectors,&pm1,&beta,T,n FCLEN FCLEN);
   count=0;
   for (k=0;k<*ncom;k++){
    tempsum=0;
@@ -140,7 +151,7 @@ void rpcnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescale
    }
    b[k]=tempsum/tempsum2;
   }
-  dgemv_(&trans,&pm1,ncom,&alpha,eigenvectors,&pm1,b,&incx,&beta,tsk,&incy);
+  F77_CALL(dgemv)(&trans,&pm1,ncom,&alpha,eigenvectors,&pm1,b,&incx,&beta,tsk,&incy FCLEN);
   count=0;
   for (i=0;i<*p;i++)
    if (i!=j){
@@ -166,20 +177,20 @@ void rpcnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescale
      if (fabs(s[i*(*p)+j])>tempdouble)
       tempdouble=fabs(s[i*(*p)+j]);
   tempdouble=1/tempdouble;
-  dscal_(&pp,&tempdouble,s,&incx);
+  F77_CALL(dscal)(&pp,&tempdouble,s,&incx);
  }
  for (j=0;j<*p;j++)
   s[j*(*p)+j]=1;
- free(iwork);
- free(work);
- free(tsk);
- free(isuppz);
- free(eigenvectors);
- free(eigenvalues);
- free(T);
- free(G);
- free(b);
- free(y);
- free(X);
- free(data);
+ Free(iwork);
+ Free(work);
+ Free(tsk);
+ Free(isuppz);
+ Free(eigenvectors);
+ Free(eigenvalues);
+ Free(T);
+ Free(G);
+ Free(b);
+ Free(y);
+ Free(X);
+ Free(data);
 }

@@ -1,3 +1,19 @@
+# file dna/R/test.class.genes.R
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 or 3 of the License
+#  (at your option).
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  A copy of the GNU General Public License is available at
+#  http://www.r-project.org/Licenses/
+#
+
 test.class.genes=function(X1,X2,genelist=NULL,scores="PLS",distance="abs",
 num.permutations=1000,check.networks=TRUE,...){
  X1=as.matrix(X1)
@@ -38,7 +54,7 @@ rescale.scores=FALSE){
  n2=as.integer(nrow(X2))
  p=as.integer(ncol(X1))
  n.geneslist=length(genelist)
- out=.C("tdcclassPLS",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype),PACKAGE="dna") 
+ out=.C("tdcclassPLS",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype)) 
  new("resultsClassTest",p.value=out$pval,delta=out$dlt,class.genes=colnames(X1)[genelist])
 }
 
@@ -53,7 +69,7 @@ rescale.scores=FALSE){
  n2=as.integer(nrow(X2))
  p=as.integer(ncol(X1))
  n.geneslist=length(genelist)
- out=.C("tdcclassPC",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype),PACKAGE="dna") 
+ out=.C("tdcclassPC",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.integer(ncom),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype)) 
  new("resultsClassTest",p.value=out$pval,delta=out$dlt,class.genes=colnames(X1)[genelist])
 }
 
@@ -68,7 +84,7 @@ rescale.scores=FALSE){
  n2=as.integer(nrow(X2))
  p=as.integer(ncol(X1))
  n.geneslist=length(genelist)
- out=.C("tdcclassRR",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.double(lambda),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype),PACKAGE="dna") 
+ out=.C("tdcclassRR",as.double(X1),as.double(X2),as.integer(genelist),as.integer(n.geneslist),pval=double(1),dlt=double(1),n1,n2,p,as.double(lambda),as.integer(num.permutations),as.integer(rescale.data),as.integer(symmetrize.scores),as.integer(rescale.scores),as.integer(distancetype)) 
  new("resultsClassTest",p.value=out$pval,delta=out$dlt,class.genes=colnames(X1)[genelist])
 }
 

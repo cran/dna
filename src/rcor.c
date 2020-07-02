@@ -1,5 +1,27 @@
+/*  file dna/src/rcor.c
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 or 3 of the License
+ *  (at your option).
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  A copy of the GNU General Public License is available at
+ *  http://www.r-project.org/Licenses/
+ *
+ *
+ * Exports
+ *	rcor(...)
+ *
+ * to be called as  .C(.)  in ../R/cornet.R
+ */
+
 #include "plslib.h"
-extern int dcopy_(int *n, double *x, int *incx, double *y, int *incy);
+#include <R_ext/Lapack.h>
 
 void rcor(double *origdata, double *s, int *n, int *p){
  double *data;
@@ -12,8 +34,8 @@ void rcor(double *origdata, double *s, int *n, int *p){
  int incx=1;
  int incy=1;
 
- data=malloc(np*sizeof(double)); 
- dcopy_(&np,origdata,&incx,data,&incy);
+ data=Calloc(np,double); 
+ F77_CALL(dcopy)(&np,origdata,&incx,data,&incy);
 
  count=0;
  for (j=0;j<*p;j++){
@@ -48,6 +70,6 @@ void rcor(double *origdata, double *s, int *n, int *p){
    jip=j*(*p)+i;
    s[jip]=tempcor;
   }
- free(data);
+ Free(data);
 }
 

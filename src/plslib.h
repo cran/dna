@@ -1,7 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
+#include <R.h>
 
 void rplsnet(double *origdata, double *s, int *ncom, int *n, int *p, int *rescaleData, int *symmetrizeScores, int *rescaleScores);
 
